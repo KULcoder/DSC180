@@ -30,3 +30,4 @@
 #### `.gitignore`
 - **data folder** is ignored (don't upload MNIST, pytorch will help download it on your computer)
 - **jupyter notebook checkpoint**
+- **__pycache__**
