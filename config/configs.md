@@ -32,5 +32,5 @@
 ## training
 - **epochs**
 - **criterion**: loss to use
-    - choice: <u>"cross_entropy"</u>, "<u>MSE"</u> (not implemented)
+    - choice: <u>"cross_entropy"</u>, "<u>MSE"</u> 
 
