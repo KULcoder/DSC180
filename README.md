@@ -31,8 +31,12 @@ This project explores the question of how features evolve during the training pr
 - requirements.txt
 - run.py
 
+## Env
+Use `conda env create -f environment.yml` to recreate the conda environment
+
 ### Notice
 #### `.gitignore`
 - **data folder** is ignored (don't upload MNIST, pytorch will help download it on your computer)
 - **jupyter notebook checkpoint**
 - **__pycache__**
+
