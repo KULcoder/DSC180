@@ -6,9 +6,13 @@ This project explores the question of how features evolve during the training pr
 - data can be downloaded directly via the PyTorch 'torchvision.datasets' class.
 
 ## Agenda
-1. Write a wrapped version in run.py: record everything properly by files
-2. Write requirements.txt
-3. Complete checkpoint and load-in functionality (consider write a function to load config?)
+1. Complete model save and load functionality
+2. Set up forward hooker to record output and gradient of the first convolutional layer
+3. Extract the fully connected layer's weight w (at the end of our model), then try visualize $w^T w$ 
+4. Extract the first colutional layer's weight, try dot product matrix.
+5. Write a wrapped version in run.py: record everthing preperly by files
+6. Write a proper dockerfile
+
 
 ## Structure
 - data
