@@ -1,0 +1,31 @@
+{
+    "experiment_name": "test",
+    "data": {
+        "path": "./data",
+        "dataset": "mnist",
+        "image_channels": 1,
+        "num_classes": 10,
+        "batch_size": 512,
+        "num_workers": 2,
+        "val_split": 0.2
+    },
+    "model": {
+        "type": "LeNet",
+        "save_path": "../models/LeNet.pth"
+    },
+    "optimizer": {
+        "type": "adam",
+        "lr": 1e-3,
+        "momentum": 0.9,
+        "weight_decay": 1e-4,
+        "nestrov": false
+    },
+    "training": {
+        "epochs": 15,
+        "criterion": "cross_entropy"
+    },
+    "visualize": {
+        "perform": false,
+        "save_path": "./reports/figures/"
+    }
+}

@@ -17,9 +17,9 @@
 
 ## model
 - **type**
-    - choice: <u>"resnet18"</u>
+    - choice: <u>"resnet18"</u>, <u>"LeNet"</u>
 - **first_layer_kernel_size**
-    - first convolutional layer kernel size
+    - first convolutional layer kernel size (of ResNet)
 - **save_path**: path to save/load the model
 
 ## optimizer
