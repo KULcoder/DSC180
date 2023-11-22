@@ -7,9 +7,10 @@ import torch.nn.functional as F
 Class:
     BasicBlock
     ResNet
-    CNN
+    LeNet
 """
 
+# For ResNet
 class BasicBlock(nn.Module):
     expansion = 1
     
@@ -71,6 +72,7 @@ class ResNet(nn.Module):
         out = self.linear(out)
         return out
     
+# For LeNet
 class LeNet(nn.Module):
 
     # network structure

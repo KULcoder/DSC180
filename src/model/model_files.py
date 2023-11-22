@@ -1,6 +1,11 @@
 # Method to save model
 import torch
 
+"""
+Functions:
+    save_model
+    read_model
+"""
 
 def save_model(model, config):
     """
