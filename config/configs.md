@@ -20,6 +20,7 @@
     - choice: <u>"resnet18"</u>
 - **first_layer_kernel_size**
     - first convolutional layer kernel size
+- **save_path**: path to save/load the model
 
 ## optimizer
 - **type**

@@ -23,7 +23,17 @@ def train_model(model, train_dataloader, val_dataloader, config):
 
     print('Training model...')
 
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    # device for cuda, mps, or cpu
+    # notice this implementation only supports single GPU
+    if torch.cuda.is_available():
+        device = torch.device('cuda')
+    elif torch.backends.mps.is_available():
+        device = torch.device('mps')
+    else:
+        device = torch.device('cpu')
+
+    print(f'Using device {device}')
+
     model = model.to(device)
     
     # for ynamic display loss and accuracy

@@ -21,7 +21,17 @@ def test_model(model, test_dataloader, config):
 
     print('Testing model...')
 
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    # device for cuda, mps, or cpu
+    # notice this implementation only supports single GPU
+    if torch.cuda.is_available():
+        device = torch.device('cuda')
+    elif torch.backends.mps.is_available():
+        device = torch.device('mps')
+    else:
+        device = torch.device('cpu')
+
+    print(f'Using device {device}')
+
     model = model.to(device)
 
     # set model to eval mode
@@ -60,3 +70,4 @@ def test_model(model, test_dataloader, config):
     print(f'Testing loss: {testing_loss:.4f}, Testing accuracy: {testing_acc:.4f}')
 
     return testing_loss, testing_acc
+
