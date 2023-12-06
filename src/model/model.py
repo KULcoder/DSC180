@@ -3,6 +3,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+import torch.nn.init as init
+
 """
 Class:
     BasicBlock
@@ -14,13 +16,20 @@ Class:
 class BasicBlock(nn.Module):
     expansion = 1
     
-    def __init__(self, in_channels, channels, stride=1):
+    def __init__(self, in_channels, channels, stride=1, init_method='default'):
         super(BasicBlock, self).__init__()
         self.expansion = 1
         self.conv1 = nn.Conv2d(in_channels, channels, kernel_size=3, stride=stride, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(channels)
         self.conv2 = nn.Conv2d(channels, channels, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn2 = nn.BatchNorm2d(channels)
+
+        if init_method == 'zero':
+            init.constant_(self.conv1.weight, 0)
+            init.constant_(self.conv2.weight, 0)
+        elif init_method == "normal":
+            init.normal_(self.conv1.weight, 0.0 , 1e-4)
+            init.normal_(self.conv2.weight, 0.0 , 1e-4)
         
         self.shortcut = nn.Sequential()
         if stride != 1 or in_channels != self.expansion*channels:
@@ -29,6 +38,10 @@ class BasicBlock(nn.Module):
                 nn.Conv2d(in_channels, self.expansion*channels, kernel_size=1, stride=stride, bias=False),
                 nn.BatchNorm2d(self.expansion * channels)
             )
+            if init_method == 'zero':
+                init.constant_(self.shortcut[0].weight, 0)
+            elif init_method == "normal":
+                init.normal_(self.shortcut[0].weight, 0.0 , 1e-4)
             
     def forward(self, x):
         out = nn.ReLU()(self.bn1(self.conv1(x)))
@@ -38,26 +51,31 @@ class BasicBlock(nn.Module):
         return out
     
 class ResNet(nn.Module):
-    def __init__(self, block, num_blocks, in_channels, num_classes):
+    def __init__(self, block, num_blocks, in_channels, num_classes, init_method='default'):
         super(ResNet, self).__init__()
         self.in_channels = in_channels
         
         self.conv1 = nn.Conv2d(in_channels, 64, kernel_size=3, stride=1, padding=1, bias=False)
         self.in_channels = 64 # modify as it after first channel
         self.bn1 = nn.BatchNorm2d(64)
-        self.layer1 = self._make_layer(block, 64, num_blocks[0], stride=1)
-        self.layer2 = self._make_layer(block, 128, num_blocks[1], stride=2)
-        self.layer3 = self._make_layer(block, 256, num_blocks[2], stride=2)
-        self.layer4 = self._make_layer(block, 512, num_blocks[3], stride=2)
+        self.layer1 = self._make_layer(block, 64, num_blocks[0], stride=1, init_method=init_method)
+        self.layer2 = self._make_layer(block, 128, num_blocks[1], stride=2, init_method=init_method)
+        self.layer3 = self._make_layer(block, 256, num_blocks[2], stride=2, init_method=init_method)
+        self.layer4 = self._make_layer(block, 512, num_blocks[3], stride=2, init_method=init_method)
         self.linear = nn.Linear(512*block.expansion, num_classes)
+
+        if init_method == 'zero':
+            init.constant_(self.conv1.weight, 0)
+        elif init_method == "normal":
+            init.normal_(self.conv1.weight, 0.0 , 1e-4)
         
         
-    def _make_layer(self, block, channels, num_blocks, stride):
+    def _make_layer(self, block, channels, num_blocks, stride, init_method='default'):
         strides = [stride] + [1]*(num_blocks-1)
         layers = []
         
         for stride in strides:
-            layers.append(block(self.in_channels, channels, stride))
+            layers.append(block(self.in_channels, channels, stride, init_method))
             self.in_channels = channels * block.expansion
         return nn.Sequential(*layers)
     

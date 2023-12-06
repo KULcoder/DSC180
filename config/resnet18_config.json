@@ -12,7 +12,8 @@
     "model": {
         "type": "resnet18",
         "num_blocks": [2, 2, 2, 2],
-        "save_path": "./models/resnet18.pth"
+        "save_path": "./models/resnet18.pth",
+        "init_method": "normal"
     },
     "optimizer": {
         "type": "sgd",

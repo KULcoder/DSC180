@@ -21,6 +21,8 @@
 - **first_layer_kernel_size**
     - first convolutional layer kernel size (of ResNet)
 - **save_path**: path to save/load the model
+- **init_method**: what method used to initialize the weight
+    - choice: "default", "zero", "normal"
 
 ## optimizer
 - **type**
