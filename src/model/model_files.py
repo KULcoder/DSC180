@@ -29,7 +29,7 @@ def save_model(model, config):
 
     print('Model saved')
 
-def read_model(model, config):
+def load_model(model, config):
     """
     Read model's state dictionary from a file and load it into the model.
     :param model: model to read

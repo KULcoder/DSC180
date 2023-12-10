@@ -23,6 +23,8 @@
 - **save_path**: path to save/load the model
 - **init_method**: what method used to initialize the weight
     - choice: "default", "zero", "normal"
+- **init_mean**: mean of normal init
+- **init_std**: std of normal init
 
 ## optimizer
 - **type**

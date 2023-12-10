@@ -1,7 +1,7 @@
 {
     "experiment_name": "test",
     "data": {
-        "path": "./data",
+        "path": "../data",
         "dataset": "mnist",
         "image_channels": 1,
         "num_classes": 10,
@@ -13,7 +13,9 @@
         "type": "resnet18",
         "num_blocks": [2, 2, 2, 2],
         "save_path": "./models/resnet18.pth",
-        "init_method": "zero"
+        "init_method": "normal",
+        "init_mean": 0.0,
+        "init_std": 1e-4
     },
     "optimizer": {
         "type": "sgd",

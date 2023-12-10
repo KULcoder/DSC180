@@ -1,3 +1,4 @@
 /data/
 *-checkpoint.ipynb
 __pycache__/
+example.pth
