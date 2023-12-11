@@ -3,7 +3,7 @@
 This project explores the question of how features evolve during the training process. For example, do they become more orthogonal? To investigate this, we will be examining the MNIST dataset: a large database consisting of handwritten digits ranging from 0 to 9, where each image is 28x28 pixels in size. We build a 5-layer ResNet-18 to train on the MNIST dataset, we will then investigate how features evolve during the training process (in each epoch) and possibly investigate how the CNFA or the AGOP changes in the process.
 
 ## Example usage
-1. Set up environment by `environment.yml`.
+1. Set up environment by `conda env create -f environment.yml`.
 2. Check `notebooks/0.0-Example-Usage.ipynb` file: it tells how the source code works.
 3. Check `notebooks/9.0-Q1-Result.ipynb` file: it includes the code how we obatin our result.
 
