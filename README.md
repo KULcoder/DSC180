@@ -12,6 +12,7 @@ This project explores the question of how features evolve during the training pr
 
 ## Reference Paper
 https://arxiv.org/abs/2309.00570 
+https://arxiv.org/abs/2212.13881
 
 ## Agenda
 1. Set up hooks to record layer outputs and gradients of the first convolutional layer
