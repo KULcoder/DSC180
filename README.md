@@ -1,4 +1,4 @@
-# DSC180A Project 1: Neural Network Feature Development
+# DSC180: Neural Network Feature Development with Recursive Feature Machine
 
 This project explores the question of how features evolve during the training process. For example, do they become more orthogonal? To investigate this, we will be examining the MNIST dataset: a large database consisting of handwritten digits ranging from 0 to 9, where each image is 28x28 pixels in size. We build a 5-layer ResNet-18 to train on the MNIST dataset, we will then investigate how features evolve during the training process (in each epoch) and possibly investigate how the CNFA or the AGOP changes in the process.
 
