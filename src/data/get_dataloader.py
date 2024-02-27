@@ -18,6 +18,10 @@ def get_dataset(dataset, path, train, transform):
         return torchvision.datasets.MNIST(
             root=path, train=train, transform=transform, download=True
             )
+    elif dataset == 'cifar10':
+        return torchvision.datasets.CIFAR10(
+            root=path, train=train, transform=transform, download=True
+        )
     else:
         raise NotImplementedError(f'Dataset {dataset} not implemented')
     
@@ -44,10 +48,23 @@ def get_dataloaders(config):
     num_workers = config_data['num_workers']
     torch.manual_seed(42) # for reproducibility
 
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize((0.1307,), (0.3081,)) # MNIST mean and std
+    if dataset == 'mnist':
+        transform = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize((0.1307,), (0.3081,)) # MNIST mean and std
+            ])
+    elif dataset == 'cifar10':
+        transform = transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
         ])
+    else:
+        transform = transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor()
+        ])
+
     
     train_dataset = get_dataset(dataset, path, train=True, transform=transform)
     test_dataset = get_dataset(dataset, path, train=False, transform=transform)
