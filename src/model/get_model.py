@@ -1,5 +1,6 @@
 import torch
 from .model import LeNet, ResNet, BasicBlock
+from torchvision import models
 
 """
 Functions:
@@ -25,6 +26,11 @@ def get_model(config):
         model = ResNet(BasicBlock, num_blocks, in_channels, num_classes, init_method)
     elif model_name == "LeNet":
         model = LeNet()
+    elif model_name == 'vgg11':
+        if config['model']['pre_trained']:
+            model = models.vgg11(weights='DEFAULT')
+        else:
+            model = models.vgg11(weights=None)
     else:
         raise NotImplementedError(f'Model {model_name} not implemented')
     

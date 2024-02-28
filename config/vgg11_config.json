@@ -17,7 +17,8 @@
         "init_mean": 0.0,
         "init_std": 1e-4,
         "agop_path": "./agop/",
-        "nfm_path": "./nfm/"
+        "nfm_path": "./nfm/",
+        "pre_trained": false
     },
     "optimizer": {
         "type": "sgd",
