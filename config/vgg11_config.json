@@ -12,12 +12,12 @@
     "model": {
         "type": "vgg11",
         "num_blocks": [2, 2, 2, 2],
-        "save_path": "./models/vgg11.pth",
+        "save_path": "../models/vgg11.pth",
         "init_method": "normal",
         "init_mean": 0.0,
         "init_std": 1e-4,
-        "agop_path": "./agop/",
-        "nfm_path": "./nfm/",
+        "agop_path": "../agop/",
+        "nfm_path": "../nfm/",
         "pre_trained": false
     },
     "optimizer": {

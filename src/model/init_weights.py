@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch
 from torch.distributions import MultivariateNormal
 
+from scipy.linalg import eigvals
 import numpy as np
 import os
 
@@ -81,15 +82,21 @@ def init_conv_with_cov(conv_layer, cov_matrix):
     In place operation
     """
 
-    out_channel, in_channel, kernel_size, kernel_size = conv_layer.weights.data.shape
-    means = torch.zeros(out_channel * kernel_size * kernel_size)
+    out_channel, in_channel, kernel_size, kernel_size = conv_layer.weight.data.shape
+    means = torch.zeros(in_channel * kernel_size * kernel_size)
     distribution = MultivariateNormal(means, cov_matrix)
-    # total in_channel amount of samples
-    new_weights = distribution.sample((in_channel, )).reshape(out_channel, in_channel, kernel_size, kernel_size)
+    # total out_channel amount of samples
+    new_weights = distribution.sample((out_channel, )).reshape(out_channel, in_channel, kernel_size, kernel_size)
     new_weights.requires_grad = True
     conv_layer.weight = nn.Parameter(new_weights)
 
-
+def make_positive_definite(A):
+    eigenvalues = eigvals(A)
+    min_eigenvalue = min(eigenvalues)
+    if min_eigenvalue <= 0:
+        A_modified = A + (abs(min_eigenvalue) + 1e-5)*np.eye(A.shape[0])
+        return A_modified
+    return A
 
 def agop_init(config, model):
     """
@@ -103,6 +110,7 @@ def agop_init(config, model):
             # load the agop
             agop_path = os.path.join(config['model']['agop_path'], f"layer_{conv_layer_index}.csv")
             agop = np.loadtxt(agop_path, delimiter=',')
+            agop = make_positive_definite(agop)
             agop = torch.from_numpy(agop).float()
             init_conv_with_cov(module, agop)
             conv_layer_index += 1
@@ -123,6 +131,7 @@ def nfm_init(config, model):
             # load the nfm
             nfm_path = os.path.join(config['model']['nfm_path'], f"layer_{conv_layer_index}.csv")
             nfm = np.loadtxt(nfm_path, delimiter=',')
+            nfm = make_positive_definite(nfm)
             nfm = torch.from_numpy(nfm).float()
             init_conv_with_cov(module, nfm)
             conv_layer_index += 1
