@@ -1,4 +1,10 @@
 import torch.nn.init as init
+import torch.nn as nn
+import torch
+from torch.distributions import MultivariateNormal
+
+import numpy as np
+import os
 
 def init_weights(config, model):
     """
@@ -11,6 +17,10 @@ def init_weights(config, model):
         return zero_init(config, model)
     elif config['model']['init_method'] == "normal":
         return normal_init(config, model)
+    elif config['model']['init_method'] == 'agop':
+        return agop_init(config, model)
+    elif config['model']['init_method'] == 'nfm':
+        return nfm_init(config, model)
     else:
         raise NotImplementedError(f'Model {config["model"]["type"]} not implemented')
     
@@ -61,6 +71,61 @@ def normal_init(config, model):
         init.normal_(model.fc3.weight, init_mean, init_std)
     else:
         raise NotImplementedError(f'Model {config["model"]["type"]} normal init not implemented')
+
+    return model
+
+
+def init_conv_with_cov(conv_layer, cov_matrix):
+    """
+    Given the weight of a conv layer can covariance matrix, created a init with that.
+    In place operation
+    """
+
+    out_channel, in_channel, kernel_size, kernel_size = conv_layer.weights.data.shape
+    means = torch.zeros(out_channel * kernel_size * kernel_size)
+    distribution = MultivariateNormal(means, cov_matrix)
+    # total in_channel amount of samples
+    new_weights = distribution.sample((in_channel, )).reshape(out_channel, in_channel, kernel_size, kernel_size)
+    new_weights.requires_grad = True
+    conv_layer.weight = nn.Parameter(new_weights)
+
+
+
+def agop_init(config, model):
+    """
+    Initialize the weight of convolution layers with agop as covariance.
+    ONLY FOR VGG11
+    """
+    
+    conv_layer_index = 0
+    for name, module in model.features.named_children():
+        if isinstance(module, nn.Conv2d):
+            # load the agop
+            agop_path = os.path.join(config['model']['agop_path'], f"layer_{conv_layer_index}.csv")
+            agop = np.loadtxt(agop_path, delimiter=',')
+            agop = torch.from_numpy(agop).float()
+            init_conv_with_cov(module, agop)
+            conv_layer_index += 1
+
+    return model
+            
+
+
+
+def nfm_init(config, model):
+    """
+    Initialize the weight of convolution layers with nfm as covariance matrix.
+    ONLY FOR VGG11
+    """
+    conv_layer_index = 0
+    for name, module in model.features.named_children():
+        if isinstance(module, nn.Conv2d):
+            # load the nfm
+            nfm_path = os.path.join(config['model']['nfm_path'], f"layer_{conv_layer_index}.csv")
+            nfm = np.loadtxt(nfm_path, delimiter=',')
+            nfm = torch.from_numpy(nfm).float()
+            init_conv_with_cov(module, nfm)
+            conv_layer_index += 1
 
     return model
 

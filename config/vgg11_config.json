@@ -1,0 +1,37 @@
+{
+    "experiment_name": "test",
+    "data": {
+        "path": "../data",
+        "dataset": "cifar10",
+        "image_channels": 1,
+        "num_classes": 10,
+        "batch_size": 512,
+        "num_workers": 2,
+        "val_split": 0.2
+    },
+    "model": {
+        "type": "vgg11",
+        "num_blocks": [2, 2, 2, 2],
+        "save_path": "./models/vgg11.pth",
+        "init_method": "normal",
+        "init_mean": 0.0,
+        "init_std": 1e-4,
+        "agop_path": "./agop/",
+        "nfm_path": "./nfm/"
+    },
+    "optimizer": {
+        "type": "sgd",
+        "lr": 1e-4,
+        "momentum": 0.9,
+        "weight_decay": 1e-4,
+        "nestrov": false
+    },
+    "training": {
+        "epochs": 15,
+        "criterion": "cross_entropy"
+    },
+    "visualize": {
+        "perform": false,
+        "save_path": "./reports/figures/"
+    }
+}
