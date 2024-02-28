@@ -44,6 +44,13 @@ def zero_init(config, model):
         init.constant_(model.fc1.weight, 0)
         init.constant_(model.fc2.weight, 0)
         init.constant_(model.fc3.weight, 0)
+    elif config['model']['type'] == "vgg11":
+        for name, module in model.features.named_children():
+            if isinstance(module, nn.Conv2d):
+                nn.init.constant_(module.weight, 0)
+                if module.bias is not None:
+                    nn.init.constant_(module.bias, 0)
+                
     else:
         raise NotImplementedError(f'Model {config["model"]["type"]} zero init not implemented')
     
@@ -70,6 +77,16 @@ def normal_init(config, model):
         init.normal_(model.fc1.weight, init_mean, init_std)
         init.normal_(model.fc2.weight, init_mean, init_std)
         init.normal_(model.fc3.weight, init_mean, init_std)
+    elif config['model']['type'] == "vgg11":
+        for name, module in model.features.named_children():
+            if isinstance(module, nn.Conv2d):
+                nn.init.normal_(
+                    module.weight,
+                    mean = init_mean,
+                    std = init_std
+                )
+                if module.bias is not None:
+                    nn.init.constant_(module.bias, 0)
     else:
         raise NotImplementedError(f'Model {config["model"]["type"]} normal init not implemented')
 
