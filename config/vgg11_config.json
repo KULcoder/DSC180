@@ -15,7 +15,7 @@
         "save_path": "../models/vgg11.pth",
         "init_method": "normal",
         "init_mean": 0.0,
-        "init_std": 1e-4,
+        "init_std": 1e-2,
         "agop_path": "../agop/",
         "nfm_path": "../nfm/",
         "pre_trained": false
@@ -24,7 +24,7 @@
         "type": "sgd",
         "lr": 1e-4,
         "momentum": 0.9,
-        "weight_decay": 1e-4,
+        "weight_decay": 5e-4,
         "nestrov": false
     },
     "training": {
