@@ -14,7 +14,9 @@ def init_weights(config, model):
     - type of model
     """
 
-    if config['model']['init_method'] == "zero":
+    if config['model']['init_method'] == 'default':
+        return model
+    elif config['model']['init_method'] == "zero":
         return zero_init(config, model)
     elif config['model']['init_method'] == "normal":
         return normal_init(config, model)
