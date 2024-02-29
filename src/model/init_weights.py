@@ -112,7 +112,7 @@ def transform_matrix(A):
     eigenvalues = eigvals(A)
     min_eigenvalue = min(eigenvalues)
     if min_eigenvalue <= 0:
-        A = A + (abs(min_eigenvalue) + 1e-5)*np.eye(A.shape[0])
+        A = A + (abs(min_eigenvalue) + 1e-3)*np.eye(A.shape[0])
 
     # Normalizing by dividing by the trace
     trace_A = np.trace(A)
