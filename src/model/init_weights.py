@@ -114,7 +114,7 @@ def transform_matrix(A):
     eigenvalues, eigenvectors = np.linalg.eigh(A)
     min_eigenvalue = min(eigenvalues)
     if min_eigenvalue <= 0:
-        positive_eigenvalues = eigenvalues + np.abs(min_eigenvalue) + 1e-10
+        positive_eigenvalues = eigenvalues + (np.abs(min_eigenvalue) + 1e-8)
         A = eigenvectors @ np.diag(positive_eigenvalues) @ eigenvectors.T
     
     # Normalizing by dividing by the trace
