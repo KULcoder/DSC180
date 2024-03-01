@@ -111,11 +111,12 @@ def init_conv_with_cov(conv_layer, cov_matrix):
 
 def transform_matrix(A):
     # Making positive definite
-    eigenvalues = eigvals(A)
+    eigenvalues, eigenvectors = np.linalg.eigh(A)
     min_eigenvalue = min(eigenvalues)
-    if min_eigenvalue <= 0 + 1e-4:
-        A = A + (abs(min_eigenvalue) + 1e-4)*np.eye(A.shape[0])
-
+    if min_eigenvalue <= 0:
+        positive_eigenvalues = eigenvalues + np.abs(min_eigenvalue) + 1e-10
+        A = eigenvectors @ np.diag(positive_eigenvalues) @ eigenvectors.T
+    
     # Normalizing by dividing by the trace
     trace_A = np.trace(A)
     if trace_A > 0:
@@ -142,8 +143,6 @@ def agop_init(config, model):
 
     return model
             
-
-
 
 def nfm_init(config, model):
     """
