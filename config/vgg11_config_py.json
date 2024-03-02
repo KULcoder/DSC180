@@ -13,7 +13,7 @@
         "type": "vgg11",
         "num_blocks": [2, 2, 2, 2],
         "save_path": "./models",
-        "save_model": true,
+        "save_model": false,
         "init_method": "agop",
         "init_mean": 0.0,
         "init_std": 1e-2,
