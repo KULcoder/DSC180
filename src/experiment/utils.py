@@ -1,4 +1,5 @@
 import torch
+import json
 
 """
 Function:
@@ -16,3 +17,7 @@ def one_hot_encode(labels, num_classes):
     one_hot = torch.zeros(batch_size, num_classes)
     one_hot[torch.arange(batch_size), labels] = 1
     return one_hot
+
+def save_log(dictionary, save_path):
+    with open(save_path, "w") as json_file:
+        json.dump(dictionary, json_file)

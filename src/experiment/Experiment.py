@@ -11,6 +11,7 @@ import torch
 import torch.nn as nn
 from tqdm import tqdm
 import numpy as np
+import time
 
 class Experiment(object):
     """
@@ -35,10 +36,14 @@ class Experiment(object):
         # prepare device
         if torch.cuda.is_available():
             self.__device = torch.device('cuda')
+            self.__device_name = torch.cuda.get_device_name(torch.cuda.current_device())
         elif torch.backends.mps.is_available():
             self.__device = torch.device('mps')
+            self.__device_name = "apple_silicon"
         else:
             self.__device = torch.device('cpu')
+            self.__device_name = "cpu"
+
         print(f'Using device {self.__device}')
         # prepare dataloader
         self.__train_loader, \
@@ -85,8 +90,12 @@ class Experiment(object):
         self.__current_epoch = 0
         self.__epochs = self.__config['training']['epochs']
 
+        self.__log = {}
+
     def run(self, run_epochs=None):
         print('\t\trunning experiment')
+        start_time = time.time()
+
         start_epoch = self.__current_epoch
         if run_epochs != None:
             end_epoch = start_epoch + run_epochs
@@ -121,6 +130,34 @@ class Experiment(object):
                 set_description(f"Train (loss={np.mean(live_stats['loss']):.3f}, acc={np.mean(live_stats['acc']):.3f})")
 
         test_loss, test_acc = self.__test(validation=False)
+
+        finish_time = time.time()
+        run_time = round(finish_time - start_time, 2)
+
+        # add information to the log
+        best_train_acc = max(self.__train_accs)
+        best_train_loss = min(self.__train_losses)
+        best_val_acc = max(self.__val_accs)
+        best_val_loss = min(self.__val_losses)
+
+
+        # log file
+        self.__log = {
+            "experiment_name": self.__config['experiment_name'],
+            "config": self.__config,
+            "device": self.__device_name,
+            "run_time": run_time,
+            "test_acc": test_acc,
+            "test_loss": test_loss,
+            "best_val_acc": best_val_acc,
+            "best_val_loss": best_val_loss,
+            "best_train_acc": best_train_acc,
+            "best_train_loss": best_train_loss,
+            "val_accs": self.__val_accs,
+            "val_losses": self.__val_losses,
+            "train_accs": self.__train_accs,
+            "train_losses": self.__train_losses
+        }
         
         return self.__train_losses, \
             self.__train_accs, \
@@ -223,3 +260,6 @@ class Experiment(object):
     
     def get_config(self):
         return self.__config
+    
+    def get_log(self):
+        return self.__log

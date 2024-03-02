@@ -5,8 +5,8 @@
         "dataset": "cifar10",
         "image_channels": 1,
         "num_classes": 10,
-        "batch_size": 512,
-        "num_workers": 2,
+        "batch_size": 64,
+        "num_workers": 4,
         "val_split": 0.2
     },
     "model": {
@@ -16,8 +16,8 @@
         "init_method": "agop",
         "init_mean": 0.0,
         "init_std": 1e-2,
-        "agop_path": "./agop/",
-        "nfm_path": "./nfm/",
+        "agop_path": "./agop",
+        "nfm_path": "./nfm",
         "pre_trained": false
     },
     "optimizer": {
@@ -28,8 +28,9 @@
         "nestrov": false
     },
     "training": {
-        "epochs": 15,
-        "criterion": "cross_entropy"
+        "epochs": 1,
+        "criterion": "cross_entropy",
+        "log_path": "./logs"
     },
     "visualize": {
         "perform": false,
