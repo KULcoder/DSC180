@@ -49,7 +49,8 @@ if __name__ == '__main__':
     # Log the file
     log_name = config['experiment_name']+"_"+str(round(time.time()))+".json"
 
-    os.makedirs(config["training"]['log_path'])
+    if not os.path.exists(config["training"]['log_path']):
+        os.makedirs(config["training"]['log_path'])
     log_path = os.path.join(config["training"]['log_path'], log_name)
     save_log(exp.get_log(), log_path)
 
