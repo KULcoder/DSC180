@@ -24,6 +24,7 @@ import time
 from src.model.get_model import get_model
 from src.experiment.Experiment import Experiment
 from src.experiment.utils import save_log
+from src.model.model_files import save_model
 
 if __name__ == '__main__':
 
@@ -38,6 +39,12 @@ if __name__ == '__main__':
     exp = Experiment(config = config)
     exp.run()
 
+    # Save the model
+    if config['model']['save_model']:
+        model = exp.get_model()
+        save_model(model, config)
+
+    # Log the file
     log_name = config['experiment_name']+"_"+str(round(time.time()))+".json"
 
     os.makedirs(config["training"]['log_path'])
