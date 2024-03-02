@@ -6,8 +6,9 @@ This project explores the question of how features evolve during the training pr
 1. Set up environment by `conda env create -f environment.yml`.
 2. Check `notebooks/0.0-Example-Usage.ipynb` file: it tells how the source code works.
 3. Check `notebooks/9.0-Q1-Result.ipynb` file: it includes the code how we obatin our result.
-4. In the root directory, run `python3 experiments/train_test.py <experiment_name> <config_file>` to train a model according to that config file.
+4. In the root directory, run `python3 experiments/train_test.py <config_file>` to train a model according to that config file.
    - result will be saved into `logs` folder
+   - if `save_model=true`, model will be saved into `models` folder
 
 ### Retrieving the data locally: 
 - data downloaded directly via the PyTorch 'torchvision.datasets' class.
