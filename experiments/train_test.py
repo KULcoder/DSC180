@@ -5,7 +5,11 @@ Design:
 
 Ways to run:
 
-python3 experiments/train_test.py experiment_name
+python3 experiments/train_test.py experiment_name config_file
+
+Example
+
+python3 experiments/train_test.py test_agop vgg11_config_py.json
 
 """
 
@@ -24,10 +28,10 @@ from src.experiment.utils import save_log
 if __name__ == '__main__':
 
     exp_name = sys.argv[1]
-    args = sys.argv[2:]
+    config_file = sys.argv[2]
 
     # read the config
-    config_path = os.path.join("config", "vgg11_config_py.json")
+    config_path = os.path.join("config", config_file)
     with open(config_path) as json_file:
         config = json.load(json_file)
 

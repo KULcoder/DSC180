@@ -158,6 +158,9 @@ class Experiment(object):
             "train_accs": self.__train_accs,
             "train_losses": self.__train_losses
         }
+
+        print("Test Acc:", test_acc)
+        print("Test Loss:", test_loss)
         
         return self.__train_losses, \
             self.__train_accs, \
