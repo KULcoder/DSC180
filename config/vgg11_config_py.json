@@ -12,8 +12,8 @@
     "model": {
         "type": "vgg11",
         "num_blocks": [2, 2, 2, 2],
-        "save_path": "./models/vgg11.pth",
-        "save_model": false,
+        "save_path": "./models",
+        "save_model": true,
         "init_method": "agop",
         "init_mean": 0.0,
         "init_std": 1e-2,

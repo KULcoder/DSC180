@@ -5,11 +5,11 @@ Design:
 
 Ways to run:
 
-python3 experiments/train_test.py experiment_name config_file
+python3 experiments/train_test.py config_file
 
 Example
 
-python3 experiments/train_test.py test_agop vgg11_config_py.json
+python3 experiments/train_test.py vgg11_config_py.json
 
 """
 
@@ -28,8 +28,7 @@ from src.model.model_files import save_model
 
 if __name__ == '__main__':
 
-    exp_name = sys.argv[1]
-    config_file = sys.argv[2]
+    config_file = sys.argv[1]
 
     # read the config
     config_path = os.path.join("config", config_file)
@@ -42,6 +41,9 @@ if __name__ == '__main__':
     # Save the model
     if config['model']['save_model']:
         model = exp.get_model()
+        save_name = config['model']['type']+"_"+config['experiment_name']+"_"+str(round(time.time()))+".pth"
+        save_path = os.path.join(config["model"]["save_path"], save_name)
+        config['model']['save_path'] = save_path
         save_model(model, config)
 
     # Log the file
