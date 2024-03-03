@@ -24,6 +24,8 @@ def init_weights(config, model):
         return agop_init(config, model)
     elif config['model']['init_method'] == 'nfm':
         return nfm_init(config, model)
+    elif config['model']['init_method'] == 'kaiming':
+        return kaiming_init(config, model)
     else:
         raise NotImplementedError(f'Model {config["model"]["type"]} not implemented')
     
@@ -110,6 +112,10 @@ def kaiming_init(config, model):
                 )
                 if module.bias is not None:
                     nn.init.constant_(module.bias, 0)
+    else:
+        raise NotImplementedError(f'Model {config["model"]["type"]} kaiming  init not implemented')
+    
+    return model
 
 
 def init_conv_with_cov(conv_layer, cov_matrix):
