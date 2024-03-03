@@ -94,6 +94,23 @@ def normal_init(config, model):
 
     return model
 
+def kaiming_init(config, model):
+    """
+    Initlize the weight of model with kaiming init method.
+    """
+
+    if config['model']['type'] == "vgg11":
+        for name, module in model.features.named_children():
+            if isinstance(module, nn.Conv2d):
+                nn.init.kaiming_normal_(
+                    module.weight,
+                    a = 0,
+                    mode = 'fan_in',
+                    nonlinearity = 'relu'
+                )
+                if module.bias is not None:
+                    nn.init.constant_(module.bias, 0)
+
 
 def init_conv_with_cov(conv_layer, cov_matrix):
     """

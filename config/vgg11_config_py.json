@@ -1,5 +1,5 @@
 {
-    "experiment_name": "test",
+    "experiment_name": "test-normal",
     "data": {
         "path": "./data",
         "dataset": "cifar10",
@@ -14,22 +14,22 @@
         "num_blocks": [2, 2, 2, 2],
         "save_path": "./models",
         "save_model": false,
-        "init_method": "agop",
+        "init_method": "normal",
         "init_mean": 0.0,
-        "init_std": 1e-2,
+        "init_std": 5e-2,
         "agop_path": "./agop",
         "nfm_path": "./nfm",
         "pre_trained": false
     },
     "optimizer": {
         "type": "sgd",
-        "lr": 1e-4,
+        "lr": 1e-3,
         "momentum": 0.9,
         "weight_decay": 5e-4,
         "nestrov": false
     },
     "training": {
-        "epochs": 1,
+        "epochs": 10,
         "criterion": "cross_entropy",
         "log_path": "./logs"
     },
