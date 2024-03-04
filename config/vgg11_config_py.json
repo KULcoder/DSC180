@@ -1,5 +1,5 @@
 {
-    "experiment_name": "test-kaiming",
+    "experiment_name": "test-nfm",
     "data": {
         "path": "./data",
         "dataset": "cifar10",
@@ -14,7 +14,7 @@
         "num_blocks": [2, 2, 2, 2],
         "save_path": "./models",
         "save_model": false,
-        "init_method": "kaiming",
+        "init_method": "nfm",
         "init_mean": 0.0,
         "init_std": 5e-2,
         "agop_path": "./agop",
