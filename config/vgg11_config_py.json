@@ -1,5 +1,5 @@
 {
-    "experiment_name": "test-nfm",
+    "experiment_name": "test",
     "data": {
         "path": "./data",
         "dataset": "cifar10",
@@ -29,7 +29,7 @@
         "nestrov": false
     },
     "training": {
-        "epochs": 10,
+        "epochs": 15,
         "criterion": "cross_entropy",
         "log_path": "./logs"
     },
