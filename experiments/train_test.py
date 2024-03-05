@@ -27,6 +27,7 @@ from src.experiment.utils import save_log
 from src.model.model_files import save_model
 
 LIST_OF_TESTING_INIT_METHODS = ['normal', 'xavier', 'kaiming_uniform', 'kaiming_normal', 'agop', 'nfm', 'kaiming_agop', 'kaiming_nfm']
+# LIST_OF_TESTING_INIT_METHODS = ['kaiming_agop']
 
 if __name__ == '__main__':
 
@@ -37,10 +38,12 @@ if __name__ == '__main__':
     with open(config_path) as json_file:
         config = json.load(json_file)
 
+    exp_name = config['experiment_name']
+
     for init_method in LIST_OF_TESTING_INIT_METHODS:
 
         # modify the config for testing methods
-        config['experiment_name'] = config['experiment_name'] + init_method
+        config['experiment_name'] = exp_name + init_method
         config['model']['init_method'] = init_method
 
         exp = Experiment(config = config)

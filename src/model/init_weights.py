@@ -253,6 +253,7 @@ def kaiming_agop_init(config, model):
                 agop_path = os.path.join(config['model']['agop_path'], f"layer_{conv_layer_index}.csv")
                 agop = np.loadtxt(agop_path, delimiter=',')
                 agop = transform_matrix(agop, norm=False)
+                agop /= 10 # agop scale is different from nfm
                 agop = torch.from_numpy(agop).float()
                 init_conv_with_cov(module, agop, kaiming=True)
                 conv_layer_index += 1
