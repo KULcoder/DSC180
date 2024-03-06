@@ -14,21 +14,29 @@ from numpy.linalg import eig
 from copy import deepcopy
 from torch.linalg import norm, svd
 from torchvision import models
+import json
 
-SEED = 2323
+import os
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+from src.data.get_dataloader import *
+
+SEED = 42
+
 
 torch.manual_seed(SEED)
 random.seed(SEED)
 np.random.seed(SEED)
 torch.cuda.manual_seed(SEED)
 
-def save_agop_vgg11(model, train_dataloader):
-    saving_path_nfm = "nfm/"
-    saving_path_agop = "agop/"
+def save_agop_vgg11(model, train_dataloader,fp):
+    saving_path_nfm = fp+"nfm/"
+    saving_path_agop = fp+"agop/"
 
     idxs = list(range(8)) # total 8 layers for vgg11
     for idx in idxs:
-        nfm, agop = get_nfm_agop(model, model, train_dataloader, layer_idx=idx)
+        nfm, agop = get_nfm_agop(model, train_dataloader, layer_idx=idx)
 
         path_nfm = saving_path_nfm + f"layer_{idx}.csv"
         path_agop = saving_path_agop + f"layer_{idx}.csv"
@@ -86,16 +94,11 @@ def correlation(M1, M2):
     return torch.sum(M1 * M2) / (norm1 * norm2)
 
 
-def get_nfm_agop(net, init_net, trainloader, layer_idx=0):
+def get_nfm_agop(net, trainloader, layer_idx=0):
 
 
-    net, patchnet, M, M0, l_idx, conv_vals = load_nn(net,
-                                                     init_net,
-                                                     layer_idx=layer_idx)
+    net, patchnet, M, l_idx, conv_vals = load_nn(net,layer_idx=layer_idx)
     (q, s), (pad1, pad2), (s1, s2) = conv_vals
-
-    # i_val = correlation(M0, M)
-    # print("Correlation between Initial and Trained CNFM: ", i_val)
 
     G = get_grads(net, patchnet, trainloader,
                   kernel=(q, s),
@@ -103,10 +106,6 @@ def get_nfm_agop(net, init_net, trainloader, layer_idx=0):
                   stride=(s1, s2),
                   layer_idx=l_idx)
     G = sqrt(G)
-
-    # r_val = correlation(M, G)
-    # print("Correlation between Trained CNFM and AGOP: ", r_val)
-    # print("Final: ", i_val, r_val)
 
     return M, G
 
@@ -118,7 +117,7 @@ def sqrt(G):
     return G
 
 
-def load_nn(net, init_net, layer_idx=0):
+def load_nn(net, layer_idx=0):
 
     count = 0
     for idx, m in enumerate(net.features):
@@ -149,13 +148,9 @@ def load_nn(net, init_net, layer_idx=0):
 
             M = M.reshape(-1, ki*q*s)
             M = torch.einsum('nd, nD -> dD', M, M)
-
-            M0 = [p for p in init_net.parameters()][idx]
-            M0 = M0.reshape(-1, ki*q*s)
-            M0 = torch.einsum('nd, nD -> dD', M0, M0)
             break
 
-    return net, patchnet, M, M0, l_idx, [(q, s), (pad1,pad2), (s1,s2)]
+    return net, patchnet, M, l_idx, [(q, s), (pad1,pad2), (s1,s2)]
 
 
 def patchify(x, patch_size, stride_size, padding=None, pad_type='zeros'):
@@ -208,3 +203,43 @@ def egop(model, z):
         #grads = J.reshape(n*w*h, 1, -1)
         ajop += torch.einsum('ncd, ncD -> dD', grads, grads)
     return ajop
+
+    
+if __name__ == "__main__":
+    config_file = sys.argv[1]
+
+    # read the config
+    config_path = os.path.join("config", config_file)
+    with open(config_path) as json_file:
+        config = json.load(json_file)
+
+    # Extract configuration parameters
+    config_agop = config["agop_nfm"]
+    savepath = config_agop["save_path"]
+    pretrained = config_agop["pretrained"]
+    data = config["data"]["dataset"]
+    model_path = config_agop["model_path"]
+    config["data"]["barch_size"] = 2
+    trainloader, _,_ = get_dataloaders(config)
+    
+    net = models.vgg11(weights = "DEFAULT")
+    
+    if pretrained:
+        net = models.vgg11(weights ="DEFAULT")
+        if data == "mnist":
+            net.features[0] = nn.Conv2d(in_channels=1,out_channels=64,kernel_size=(7,7),padding = (3,3),bias = False)
+            net.classifier[6] = nn.Linear(4096, 10, bias=True)
+        elif data == "cifar10":
+            net.classifier[6] = nn.Linear(4096, 10, bias=True)    
+    else:
+        net = models.vgg11(weights = None)
+        if data == "mnist":
+            net.features[0] = nn.Conv2d(in_channels=1,out_channels=64,kernel_size=(7,7),padding = (3,3),bias = False)
+            net.classifier[6] = nn.Linear(4096, 10, bias=True)
+            net.load_state_dict(torch.load(model_path))
+        elif data == "cifar10":
+            net.classifier[6] = nn.Linear(4096, 10, bias=True)
+            net.load_state_dict(torch.load(model_path)) 
+        
+    save_agop_vgg11(net, trainloader,savepath)
+    print("agop and nfm saved")
