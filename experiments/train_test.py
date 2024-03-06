@@ -43,7 +43,7 @@ if __name__ == '__main__':
     for init_method in LIST_OF_TESTING_INIT_METHODS:
 
         # modify the config for testing methods
-        config['experiment_name'] = exp_name + init_method
+        config['experiment_name'] = exp_name + "_" + init_method
         config['model']['init_method'] = init_method
 
         exp = Experiment(config = config)
