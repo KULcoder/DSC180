@@ -9,6 +9,11 @@
         "num_workers": 4,
         "val_split": 0.2
     },
+    "agop_nfm":{
+        "save_path": "agop_nfm/",
+        "pretrained": true,
+        "model_path": "models/cus_vgg.pth"
+    },
     "model": {
         "type": "vgg11",
         "num_blocks": [2, 2, 2, 2],
