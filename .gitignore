@@ -7,3 +7,4 @@ example.pth
 /agop/
 /logs/
 *vgg11*.pth
+result/*.json
