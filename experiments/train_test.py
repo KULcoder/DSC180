@@ -45,7 +45,7 @@ if __name__ == '__main__':
         for run in range(runs):
 
             # modify the config for testing methods
-            config['experiment_name'] = exp_name + "_" + init_method + "_" + run
+            config['experiment_name'] = exp_name + "_" + init_method + "_" + str(run)
             config['model']['init_method'] = init_method
 
             exp = Experiment(config = config)
