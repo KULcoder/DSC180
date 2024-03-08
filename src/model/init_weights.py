@@ -35,6 +35,8 @@ def init_weights(config, model):
         return kaiming_agop_init(config, model)
     elif config['model']['init_method'] == 'kaiming_nfm':
         return kaiming_nfm_init(config, model)
+    elif config['model']['init_method'] == 'uniform':
+        return uniform_init(config, model)
     else:
         raise NotImplementedError(f'Model {config["model"]["type"]} not implemented')
     
@@ -105,6 +107,22 @@ def normal_init(config, model):
         raise NotImplementedError(f'Model {config["model"]["type"]} normal init not implemented')
 
     return model
+
+def uniform_init(config, model):
+
+    init_mean = config['model']['init_mean']
+    init_std = config['model']['init_std']
+
+    if config['model']['type'] == 'vgg11':
+        for name, module in model.features.named_children():
+            if isinstance(module, nn.Conv2d):
+                nn.init.uniform_(
+                    module.weight,
+                    a = init_mean - init_std/2,
+                    b = init_std + init_std/2
+                )
+                if module.bias is not None:
+                    nn.init.constant_(module.bias, 0)
 
 def xavier_init(config, model):
     """
