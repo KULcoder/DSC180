@@ -26,7 +26,7 @@ from src.experiment.Experiment import Experiment
 from src.experiment.utils import save_log
 from src.model.model_files import save_model
 
-LIST_OF_TESTING_INIT_METHODS = ['normal', 'xavier', 'kaiming_uniform', 'kaiming_normal', 'agop', 'nfm', 'kaiming_agop', 'kaiming_nfm']
+LIST_OF_TESTING_INIT_METHODS = ['uniform', 'kaiming_uniform', 'nfm', 'kaiming_nfm']
 # LIST_OF_TESTING_INIT_METHODS = ['kaiming_agop']
 
 if __name__ == '__main__':
@@ -39,32 +39,34 @@ if __name__ == '__main__':
         config = json.load(json_file)
 
     exp_name = config['experiment_name']
+    runs = config['runs']
 
     for init_method in LIST_OF_TESTING_INIT_METHODS:
+        for run in range(runs):
 
-        # modify the config for testing methods
-        config['experiment_name'] = exp_name + "_" + init_method
-        config['model']['init_method'] = init_method
+            # modify the config for testing methods
+            config['experiment_name'] = exp_name + "_" + init_method + "_" + run
+            config['model']['init_method'] = init_method
 
-        exp = Experiment(config = config)
-        exp.run()
+            exp = Experiment(config = config)
+            exp.run()
 
-        # Save the model
-        if config['model']['save_model']:
-            model = exp.get_model()
-            save_name = config['model']['type']+"_"+config['experiment_name']+"_"+str(round(time.time()))+".pth"
-            save_path = os.path.join(config["model"]["save_path"], save_name)
-            config['model']['save_path'] = save_path
-            save_model(model, config)
+            # Save the model
+            if config['model']['save_model']:
+                model = exp.get_model()
+                save_name = config['model']['type']+"_"+config['experiment_name']+"_"+str(round(time.time()))+".pth"
+                save_path = os.path.join(config["model"]["save_path"], save_name)
+                config['model']['save_path'] = save_path
+                save_model(model, config)
 
-        # Log the file
-        log_name = config['experiment_name']+"_"+str(round(time.time()))+".json"
+            # Log the file
+            log_name = config['experiment_name']+"_"+str(round(time.time()))+".json"
 
-        if not os.path.exists(config["training"]['log_path']):
-            os.makedirs(config["training"]['log_path'])
-        log_path = os.path.join(config["training"]['log_path'], log_name)
-        save_log(exp.get_log(), log_path)
+            if not os.path.exists(config["training"]['log_path']):
+                os.makedirs(config["training"]['log_path'])
+            log_path = os.path.join(config["training"]['log_path'], log_name)
+            save_log(exp.get_log(), log_path)
 
-        del exp
+            del exp
 
     
