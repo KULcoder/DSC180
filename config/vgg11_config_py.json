@@ -6,7 +6,7 @@
         "dataset": "cifar10",
         "image_channels": 1,
         "num_classes": 10,
-        "batch_size": 128,
+        "batch_size": 64,
         "num_workers": 4,
         "val_split": 0.2
     },
@@ -23,6 +23,7 @@
         "init_method": "nfm",
         "init_mean": 0.0,
         "init_std": 5e-2,
+        "init_uniform_range": 1e-5,
         "agop_path": "./agop",
         "nfm_path": "./nfm",
         "pre_trained": false

@@ -111,15 +111,15 @@ def normal_init(config, model):
 def uniform_init(config, model):
 
     init_mean = config['model']['init_mean']
-    init_std = config['model']['init_std']
+    init_range = config['model']['init_uniform_range']
 
     if config['model']['type'] == 'vgg11':
         for name, module in model.features.named_children():
             if isinstance(module, nn.Conv2d):
                 nn.init.uniform_(
                     module.weight,
-                    a = init_mean - init_std/2,
-                    b = init_std + init_std/2
+                    a = init_mean - init_range/2,
+                    b = init_mean + init_range/2
                 )
                 if module.bias is not None:
                     nn.init.constant_(module.bias, 0)
