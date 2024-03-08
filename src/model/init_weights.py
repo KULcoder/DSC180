@@ -123,6 +123,10 @@ def uniform_init(config, model):
                 )
                 if module.bias is not None:
                     nn.init.constant_(module.bias, 0)
+    else:
+        raise NotImplementedError(f'Model {config["model"]["type"]} uniform init not implemented')
+    
+    return model
 
 def xavier_init(config, model):
     """
