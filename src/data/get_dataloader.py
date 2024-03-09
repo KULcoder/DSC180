@@ -26,6 +26,15 @@ def get_dataset(dataset, path, train, transform):
         return torchvision.datasets.CIFAR100(
             root=path, train=train, transform=transform, download=True
         )
+    elif dataset == 'svhn':
+        if train:
+            return torchvision.datasets.SVHN(
+                root=path, split='train', transform=transform, download=True
+            )
+        else:
+            return torchvision.datasets.SVHN(
+                root=path, split='test', transform=transform, download=True
+            )
     else:
         raise NotImplementedError(f'Dataset {dataset} not implemented')
     
@@ -68,6 +77,12 @@ def get_dataloaders(config):
             transforms.Resize((224, 224)),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.5071, 0.4867, 0.4408], std=[0.2675, 0.2565, 0.2761])
+        ])
+    elif dataset == 'svhn':
+        transform = transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.4376821, 0.4437697, 0.47280442], std=[0.19803012, 0.20101562, 0.19703614])
         ])
     else:
         transform = transforms.Compose([
