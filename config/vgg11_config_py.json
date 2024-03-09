@@ -5,7 +5,7 @@
         "path": "./data",
         "dataset": "cifar100",
         "image_channels": 1,
-        "num_classes": 10,
+        "num_classes": 100,
         "batch_size": 64,
         "num_workers": 4,
         "val_split": 0.2
