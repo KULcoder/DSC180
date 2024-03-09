@@ -26,8 +26,8 @@ from src.experiment.Experiment import Experiment
 from src.experiment.utils import save_log
 from src.model.model_files import save_model
 
-# LIST_OF_TESTING_INIT_METHODS = ['uniform', 'kaiming_uniform', 'nfm', 'kaiming_nfm']
-LIST_OF_TESTING_INIT_METHODS = ['uniform']
+LIST_OF_TESTING_INIT_METHODS = ['uniform', 'kaiming_uniform', 'nfm', 'kaiming_nfm']
+# LIST_OF_TESTING_INIT_METHODS = ['normal']
 # LIST_OF_TESTING_INIT_METHODS = ['kaiming_agop']
 
 if __name__ == '__main__':

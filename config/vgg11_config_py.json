@@ -1,9 +1,9 @@
 {
     "experiment_name": "test",
-    "runs": 5,
+    "runs": 3,
     "data": {
         "path": "./data",
-        "dataset": "cifar10",
+        "dataset": "cifar100",
         "image_channels": 1,
         "num_classes": 10,
         "batch_size": 64,
@@ -36,7 +36,7 @@
         "nestrov": false
     },
     "training": {
-        "epochs": 20,
+        "epochs": 10,
         "criterion": "cross_entropy",
         "log_path": "./logs"
     },
