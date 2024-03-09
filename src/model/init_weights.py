@@ -21,8 +21,8 @@ def init_weights(config, model):
         return zero_init(config, model)
     elif config['model']['init_method'] == "normal":
         return normal_init(config, model)
-    elif config['model']['init_method'] == 'xavier':
-        return xavier_init(config, model)
+    elif config['model']['init_method'] == 'xavier_normal':
+        return xavier_normal_init(config, model)
     elif config['model']['init_method'] == 'agop':
         return agop_init(config, model)
     elif config['model']['init_method'] == 'nfm':
@@ -129,14 +129,15 @@ def uniform_init(config, model):
     
     return model
 
-def xavier_init(config, model):
+def xavier_normal_init(config, model):
     """
     Initialize the weight with Xavier mothod.
     """
+    gain = nn.init.calculate_gain('relu')
     if config['model']['type'] == "vgg11":
         for name, module in model.features.named_children():
             if isinstance(module, nn.Conv2d):
-                nn.init.xavier_normal_(module.weight)
+                nn.init.xavier_normal_(module.weight, gain=gain)
                 if module.bias is not None:
                     nn.init.constant_(module.bias, 0)
     else:
