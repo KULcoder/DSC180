@@ -35,6 +35,15 @@ def get_dataset(dataset, path, train, transform):
             return torchvision.datasets.SVHN(
                 root=path, split='test', transform=transform, download=True
             )
+    elif dataset == 'flowers102':
+        if train:
+            return torchvision.datasets.Flowers102(
+                root=path, split='train', transform=transform, download=True
+            )
+        else:
+            return torchvision.datasets.Flowers102(
+                root=path, split='test', transform=transform, download=True
+            )
     else:
         raise NotImplementedError(f'Dataset {dataset} not implemented')
     
@@ -70,7 +79,7 @@ def get_dataloaders(config):
         transform = transforms.Compose([
             transforms.Resize((224, 224)),
             transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            transforms.Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.2023, 0.1994, 0.2010])
         ])
     elif dataset == 'cifar100':
         transform = transforms.Compose([
@@ -83,6 +92,12 @@ def get_dataloaders(config):
             transforms.Resize((224, 224)),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.4376821, 0.4437697, 0.47280442], std=[0.19803012, 0.20101562, 0.19703614])
+        ])
+    elif dataset == 'flowers102':
+        transform = transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
         ])
     else:
         transform = transforms.Compose([
