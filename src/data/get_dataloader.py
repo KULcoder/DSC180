@@ -1,7 +1,9 @@
 import torch
 import torchvision
-from torchvision import transforms
+from torchvision import transforms, datasets
 from torch.utils.data import DataLoader, random_split
+
+import os
 
 """
 Functions:
@@ -14,6 +16,7 @@ def get_dataset(dataset, path, train, transform):
     """
     Return torch Dataset object for DataLoader
     """
+    print(f"Creating Dataloaders for {dataset}")
     if dataset == 'mnist':
         return torchvision.datasets.MNIST(
             root=path, train=train, transform=transform, download=True
@@ -50,10 +53,27 @@ def get_dataset(dataset, path, train, transform):
                 root=path, split='train', transform=transform
             )
         else:
+            print('tiny_imagenet test is not implemented')
             return None
     else:
         raise NotImplementedError(f'Dataset {dataset} not implemented')
-    
+
+def get_tiny_imagenet(root, split, transform):
+    """
+    Return tiny imagenet dataset. Test split will return a None object
+    """
+    if split == 'test':
+        return None
+    elif split == 'train':
+        
+        full_path = os.path.join(root, 'tiny-imagenet-200', 'train')
+        # check if this path exist or not
+        if not os.path.exists(full_path):
+            raise FileNotFoundError('tiny imagenet is missing')
+        
+        dataset = datasets.ImageFolder(root=full_path, transform=transform)
+        return dataset
+
 def train_val_split(train_dataset, val_split=0.2):
     """
     Split train dataset into train and validation sets
@@ -129,7 +149,7 @@ def get_dataloaders(config):
             test_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers
             )
     else:
-        test_dataloader = False
+        test_dataloader = None
     
     print('Dataloaders created')
     

@@ -129,7 +129,8 @@ class Experiment(object):
             epoch_describer.\
                 set_description(f"Train (loss={np.mean(live_stats['loss']):.3f}, acc={np.mean(live_stats['acc']):.3f})")
 
-        test_loss, test_acc = self.__test(validation=False)
+        if self.__test_loader:
+            test_loss, test_acc = self.__test(validation=False)
 
         finish_time = time.time()
         run_time = round(finish_time - start_time, 2)
