@@ -44,6 +44,13 @@ def get_dataset(dataset, path, train, transform):
             return torchvision.datasets.Flowers102(
                 root=path, split='test', transform=transform, download=True
             )
+    elif dataset == 'tiny_imagenet':
+        if train:
+            return get_tiny_imagenet(
+                root=path, split='train', transform=transform
+            )
+        else:
+            return None
     else:
         raise NotImplementedError(f'Dataset {dataset} not implemented')
     
@@ -111,16 +118,19 @@ def get_dataloaders(config):
 
     train_dataset, val_dataset = train_val_split(train_dataset, val_split=val_split)
 
-    train_dataloaders = DataLoader(
+    train_dataloader = DataLoader(
         train_dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers
         )
-    val_dataloaders = DataLoader(
+    val_dataloader = DataLoader(
         val_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers
         )
-    test_dataloaders = DataLoader(
-        test_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers
-        )
+    if test_dataset:
+        test_dataloader = DataLoader(
+            test_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers
+            )
+    else:
+        test_dataloader = False
     
     print('Dataloaders created')
     
-    return train_dataloaders, val_dataloaders, test_dataloaders
+    return train_dataloader, val_dataloader, test_dataloader
