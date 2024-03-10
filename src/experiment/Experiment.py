@@ -131,6 +131,8 @@ class Experiment(object):
 
         if self.__test_loader:
             test_loss, test_acc = self.__test(validation=False)
+        else:
+            test_loss, test_acc = None, None
 
         finish_time = time.time()
         run_time = round(finish_time - start_time, 2)
