@@ -15,6 +15,7 @@ from copy import deepcopy
 from torch.linalg import norm, svd
 from torchvision import models
 import json
+import pandas as pd
 
 import os
 import sys
@@ -30,20 +31,28 @@ random.seed(SEED)
 np.random.seed(SEED)
 torch.cuda.manual_seed(SEED)
 
-def save_agop_vgg11(model, train_dataloader,fp):
-    saving_path_nfm = fp+"nfm/"
-    saving_path_agop = fp+"agop/"
+def save_agop_vgg11(model, train_dataloader,filepath):
+    saving_path_nfm = filepath+"nfm/"
+    saving_path_agop = filepath+"agop/"
+    
+    os.makedirs(saving_path_nfm,  exist_ok = True)
+    os.makedirs(saving_path_agop, exist_ok = True)
 
     idxs = list(range(8)) # total 8 layers for vgg11
     for idx in idxs:
         nfm, agop = get_nfm_agop(model, train_dataloader, layer_idx=idx)
-
+        
+        nfm = nfm.numpy()
+        agop = agop.numpy()
+        nfm_df = pd.DataFrame(nfm)
+        agop_df = pd.DataFrame(agop)
+        
         path_nfm = saving_path_nfm + f"layer_{idx}.csv"
         path_agop = saving_path_agop + f"layer_{idx}.csv"
-        outf_nfm = open(path_nfm)
-        outf_agop = open(path_agop)
-        print(nfm, file=outf_nfm)
-        print(agop, file=outf_agop)
+        
+        nfm_df.to_csv(path_nfm,index=False, header=False)
+        agop_df.to_csv(path_agop,index=False, header=False)
+        print(f"AGOP and NFM for layer {idx} saved")
 
 def get_grads(net, patchnet, trainloader,
               kernel=(3,3), padding=(1,1),
@@ -61,8 +70,8 @@ def get_grads(net, patchnet, trainloader,
     MAX_NUM_IMGS = 10
 
     for idx, batch in enumerate(trainloader):
-        print("Computing GOP for sample " + str(idx) + \
-              " out of " + str(MAX_NUM_IMGS))
+        # print("Computing GOP for sample " + str(idx) + \
+        #       " out of " + str(MAX_NUM_IMGS))
         imgs, _ = batch
         with torch.no_grad():
             imgs = imgs.cuda()
@@ -80,23 +89,8 @@ def get_grads(net, patchnet, trainloader,
     return M
 
 
-def min_max(M):
-    return (M - M.min()) / (M.max() - M.min())
-
-
-def correlation(M1, M2):
-    M1 -= M1.mean()
-    M2 -= M2.mean()
-
-    norm1 = norm(M1.flatten())
-    norm2 = norm(M2.flatten())
-
-    return torch.sum(M1 * M2) / (norm1 * norm2)
-
-
 def get_nfm_agop(net, trainloader, layer_idx=0):
-
-
+    
     net, patchnet, M, l_idx, conv_vals = load_nn(net,layer_idx=layer_idx)
     (q, s), (pad1, pad2), (s1, s2) = conv_vals
 
@@ -220,6 +214,7 @@ if __name__ == "__main__":
     data = config["data"]["dataset"]
     model_path = config_agop["model_path"]
     config["data"]["batch_size"] = 1
+   
     trainloader, _,_ = get_dataloaders(config)
     
     net = models.vgg11(weights = "DEFAULT")
@@ -242,4 +237,4 @@ if __name__ == "__main__":
             net.load_state_dict(torch.load(model_path)) 
         
     save_agop_vgg11(net, trainloader,savepath)
-    print("agop and nfm saved")
+    print("AGOP and NFM saved")
