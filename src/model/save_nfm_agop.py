@@ -219,7 +219,7 @@ if __name__ == "__main__":
     pretrained = config_agop["pretrained"]
     data = config["data"]["dataset"]
     model_path = config_agop["model_path"]
-    config["data"]["barch_size"] = 2
+    config["data"]["batch_size"] = 1
     trainloader, _,_ = get_dataloaders(config)
     
     net = models.vgg11(weights = "DEFAULT")
