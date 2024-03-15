@@ -1,6 +1,8 @@
-# DSC180: Neural Network Feature Development with Recursive Feature Machine
+# New Initialization Mechanisms for Convolutional Neural Networks
 
-This project explores the question of how features evolve during the training process. For example, do they become more orthogonal? To investigate this, we will be examining the MNIST dataset: a large database consisting of handwritten digits ranging from 0 to 9, where each image is 28x28 pixels in size. We build a 5-layer ResNet-18 to train on the MNIST dataset, we will then investigate how features evolve during the training process (in each epoch) and possibly investigate how the CNFA or the AGOP changes in the process.
+This project explores new ways of initialization convolutional neural networks utilizing Average Gradient Outer Product (AGOP) and Neural Feature Matrix (NFM). 
+Previous study suggests that AGOP and NFM characterized the feature learning process of deep learning models, and we are curious about what if we utilize those 
+information to initialize the network. Afterall, why models are always started from random?
 
 ## Example usage
 1. Set up environment by `conda env create -f environment.yml`.
@@ -13,65 +15,39 @@ This project explores the question of how features evolve during the training pr
    - if `save_model=true`, model will be saved into `models` folder
 
 ### Retrieving the data locally: 
-- data downloaded directly via the PyTorch 'torchvision.datasets' class.
+- Dataset `CIFAR10`, `CIFAR100`, `SVHN` are downloaded directly via the PyTorch 'torchvision.datasets' class.
+- Dataset `Tiny-ImageNet` is downloaded from http://cs231n.stanford.edu/tiny-imagenet-200.zip
 
 ## Reference Paper
+
+Mechanism of feature learning in convolutional neural networks
 https://arxiv.org/abs/2309.00570 
 
+Mechanism of feature learning in deep fully connected networks and kernel machines that recursively learn features
 https://arxiv.org/abs/2212.13881
 
-## Agenda
-1. Set up hooks to record layer outputs and gradients of the first convolutional layer
-2. Extract the first colutional layer's weight, try dot product matrix
-3. Find methods to implement AGOP and compare it with $w^Tw$
-4. Write a wrapped version in run.py: record everthing preperly by files
-5. Write a proper dockerfile
-6. Correct way to visualize output after each layer
+Mechanism for feature learning in neural networks and backpropagation-free machine learning models
+https://www.science.org/doi/10.1126/science.adi5639
 
-
-## Structure
-- data
-  - raw data
-- config
-  - example_config.json
-  - configs.md
-- notebooks
-- reports
-  - figures
-- src
-  - \_\_init\_\_.py
-  - experiment
-    - Experiment
-    - utils
-  - data
-    - get_dataloader
-  - models
-    - get_model
-    - init_weights
-    - model_files
-    - model
-  - visualization
-    - acc_loss
-- README.md
-- requirements.txt
-- run.py (Not Implemented)
 
 ## Env
 Use `conda env create -f environment.yml` to recreate the conda environment
 
-### Notice
-#### `.gitignore`
-- **data folder** is ignored (don't upload MNIST, pytorch will help download it on your computer)
-- **jupyter notebook checkpoint**
-- **__pycache__**
+### Alternative Methods
 
-#### Notebook Naming Rules
-1. Numbers before:
-Any file started with `0.n` is example usage notebook for reference usage.
+conda create -n env_name python=3.9
 
-**Suggestions**: 
-- Use `1.n` for training model
-- Use `2.n` for visualizing model
-- Use `3.n` for analyzing model
-- Use `9.n` for experiment results
+conda activate env_name
+
+conda config --env --add channels conda-forge
+conda install numpy
+
+conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
+
+conda install tqdm
+
+conda install scipy
+
+conda install matplotlib
+
 
