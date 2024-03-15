@@ -2,7 +2,9 @@
 
 This project explores new ways of initialization convolutional neural networks utilizing Average Gradient Outer Product (AGOP) and Neural Feature Matrix (NFM). 
 Previous study suggests that AGOP and NFM characterized the feature learning process of deep learning models, and we are curious about what if we utilize those 
-information to initialize the network. Afterall, why models are always started from random?
+information to initialize the network. Afterall, why models are always started from random? 
+
+Website to our project: https://hulicheng117.github.io/DSC180-website/
 
 ## How to Run
 1. Set up environment by `conda env create -f environment.yml`. (or alternative methods below)
@@ -47,5 +49,6 @@ conda install tqdm
 conda install scipy
 
 conda install matplotlib
+
 
 
