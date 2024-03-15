@@ -4,13 +4,11 @@ This project explores new ways of initialization convolutional neural networks u
 Previous study suggests that AGOP and NFM characterized the feature learning process of deep learning models, and we are curious about what if we utilize those 
 information to initialize the network. Afterall, why models are always started from random?
 
-## Example usage
-1. Set up environment by `conda env create -f environment.yml`.
-2. Check `notebooks/0.0-Example-Usage.ipynb` file: it tells how the source code works.
-3. Check `notebooks/9.0-Q1-Result.ipynb` file: it includes the code how we obatin our result.
-4. In the root directory, run `python3 src/model/save_nfm_agop.py <config_file>` to save the neural feature matrix and averge gradient outer product to local directory for further training.
+## How to Run
+1. Set up environment by `conda env create -f environment.yml`. (or alternative methods below)
+2. In the root directory, run `python3 src/model/save_nfm_agop.py <config_file>` to save the neural feature matrix and averge gradient outer product to local directory for further training.
    - The saved matrices for each layer will be saved under the folder specified in the config file.
-6. In the root directory, run `python3 experiments/train_test.py <config_file>` to train a model according to that config file.
+3. In the root directory, run `python3 experiments/train_test.py <config_file>` to train a model according to that config file.
    - result will be saved into `logs` folder
    - if `save_model=true`, model will be saved into `models` folder
 
